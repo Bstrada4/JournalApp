@@ -1,4 +1,4 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
 import { FirebaseAuth } from "./config";
 
 const googleProvider = new GoogleAuthProvider();
@@ -28,25 +28,44 @@ export const signInWithGoogle = async() => {
 
 export const registerUserWithEmailPassword = async({ email, password, displayName }) => {
     try {
-
-        console.log({ email, password, displayName });
-        
         const resp = await createUserWithEmailAndPassword( FirebaseAuth, email, password );
         const { uid, photoURL } = resp.user;
-        console.log( resp );
-        
         //TODO: actualizar el displayName en Firebase
         await updateProfile( FirebaseAuth.currentUser, { displayName } );
-
         return {
             ok: true,
             uid, photoURL, email, displayName
         }
 
     } catch (error) {
-
         console.log( error );
-
         return { ok: false, errorMessage: error.message }
     }
 }
+
+export const loginWithEmailPassword = async({ email, password}) => {
+    try {
+
+        // signWithEmailAndPassword
+        const resp = await signInWithEmailAndPassword( FirebaseAuth, email, password );
+        const { uid, photoURL, displayName } = resp.user;
+
+        return {
+            ok: true,
+            uid, email, displayName, photoURL
+        }        
+    } catch (error) {
+        return { ok: false, errorMessage: error.message }
+    }
+}
+
+export const logoutFireBase = async() => {
+    try {
+
+        return await FirebaseAuth.signOut();
+        
+    } catch (error) {
+        return { ok: false, errorMessage: error.message }
+    }
+}
+
