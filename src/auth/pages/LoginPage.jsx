@@ -23,7 +23,6 @@ export const LoginPage = () => {
     const { status, errorMessage } = useSelector( state => state.auth);
 
     const dispatch = useDispatch();
-
     const [ formSubmitted, setFormsubmitted ] = useState( false );
 
     const { formState, email, password, onInputChange, isFormValid, emailValid, passwordValid } = useForm( formData, formValidation );

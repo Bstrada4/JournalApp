@@ -3,15 +3,23 @@ import { IconButton, Typography } from "@mui/material";
 import { JournalLayout } from "../layout/JournalLayout";
 import { NothingSelectedView } from "../views/NothingSelectedView";
 import { NoteView } from "../views/NoteView";
-import { startNewNote } from "../../store/journal/thunks";
+import { startLoadingNotes, startNewNote } from "../../store/journal/thunks";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export const JournalPage = () => {
 
     const dispatch = useDispatch();
 
     const { isSaving, active } = useSelector( state => state.journal);
-    console.log(!!active);
+
+    useEffect(() => {
+      
+        dispatch( startLoadingNotes() );
+
+    }, [])
+    
+
     const onClickNewNote = () => {
         dispatch( startNewNote() );
     }
